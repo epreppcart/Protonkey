@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROTON GOLD SNIPER V 2.1 | Proton Fx Academy — XAUUSD MT5 Expert Advisor</title>
+  <meta name="description" content="PROTON GOLD SNIPER V 2.1 by Proton Fx Academy — an institutional-grade XAUUSD Expert Advisor for MetaTrader 5, powered by a proprietary zero-loss straddle architecture and dynamic multi-level trailing logic.">
+  <meta name="author" content="Mr. Omveer Singh | Proton Fx Academy">
+  <meta name="theme-color" content="#06080E">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Proton Fx Academy">
+  <meta property="og:title" content="PROTON GOLD SNIPER V 2.1 — Institutional-Grade XAUUSD EA for MetaTrader 5">
+  <meta property="og:description" content="Autonomous Precision. Maximum Discipline. Unmatched Gold Scalping. Engineered by Proton Fx Academy under lead developer Mr. Omveer Singh.">
+  <meta property="og:url" content="https://www.protonfxacademy.com">
+  <meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://www.protonfxacademy.com">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2306080E'/%3E%3Ccircle cx='32' cy='32' r='16' fill='none' stroke='%23F59E0B' stroke-width='4'/%3E%3Cpath d='M32 8v14M32 42v14M8 32h14M42 32h14' stroke='%23FBBF24' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23FDE68A'/%3E%3C/svg%3E">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: { 950: '#06080E', 900: '#0B0F19', 850: '#0F1522', 800: '#151C2C' },
+            gold: { 100: '#FEF3C7', 200: '#FDE68A', 300: '#FCD34D', 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706', 700: '#B45309' },
+            ink: { DEFAULT: '#F8FAFC', muted: '#94A3B8', dim: '#64748B' }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
+          },
+          boxShadow: {
+            glass: '0 10px 35px 0 rgba(0, 0, 0, 0.50)',
+            'gold-glow': '0 0 0 1px rgba(245, 158, 11, 0.25), 0 0 32px -6px rgba(245, 158, 11, 0.55)'
+          },
+          backdropBlur: { glass: '20px' }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* ---------- Base ---------- */
+    html { background: #06080E; scroll-padding-top: 6.5rem; -webkit-tap-highlight-color: transparent; }
+    ::selection { background: rgba(245, 158, 11, 0.35); color: #FFFFFF; }
+
+    /* ---------- Ambient backdrop ---------- */
+    .backdrop {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(245, 158, 11, 0.07), transparent 60%),
+        linear-gradient(180deg, #06080E 0%, #0B0F19 55%, #06080E 100%);
+    }
+    .grid-veil {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(245, 158, 11, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245, 158, 11, 0.05) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 10%, transparent 75%);
+              mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 10%, transparent 75%);
+    }
+    .orb { position: absolute; border-radius: 9999px; will-change: transform; animation: drift 24s ease-in-out infinite alternate; }
+    .orb-1 { width: 46rem; height: 46rem; top: -16rem; left: -14rem; background: radial-gradient(circle, rgba(245, 158, 11, 0.26) 0%, rgba(245, 158, 11, 0) 62%); }
+    .orb-2 { width: 40rem; height: 40rem; top: 32%; right: -16rem; background: radial-gradient(circle, rgba(217, 119, 6, 0.22) 0%, rgba(217, 119, 6, 0) 62%); animation-duration: 30s; animation-delay: -8s; }
+    .orb-3 { width: 36rem; height: 36rem; bottom: -14rem; left: 22%; background: radial-gradient(circle, rgba(251, 191, 36, 0.14) 0%, rgba(251, 191, 36, 0) 62%); animation-duration: 34s; animation-delay: -14s; }
+    @keyframes drift {
+      0%   { transform: translate3d(0, 0, 0) scale(1); }
+      50%  { transform: translate3d(4rem, 3rem, 0) scale(1.12); }
+      100% { transform: translate3d(-3rem, 5rem, 0) scale(0.94); }
+    }
+
+    /* ---------- Glass surfaces ---------- */
+    .glass {
+      background: rgba(15, 23, 42, 0.60);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.50);
+      border-radius: 1rem;
+    }
+    .glass-hover { transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s ease, box-shadow .35s ease; }
+    .glass-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(245, 158, 11, 0.50);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55), 0 0 40px -12px rgba(245, 158, 11, 0.40);
+    }
+    .terminal { background: rgba(3, 5, 10, 0.72); border: 1px solid rgba(245, 158, 11, 0.16); border-radius: .85rem; }
+
+    .nav-bar { transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease; }
+    .nav-bar.is-scrolled { background: rgba(11, 15, 25, 0.80); border-color: rgba(245, 158, 11, 0.35); box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6); }
+
+    /* ---------- Gold text shimmer ---------- */
+    .shimmer { background-size: 200% auto; animation: shimmer 6s ease-in-out infinite alternate; }
+    @keyframes shimmer { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+
+    /* ---------- Badges, chips, tiles ---------- */
+    .badge-glow {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.10));
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      color: #FCD34D;
+      box-shadow: 0 0 18px -2px rgba(245, 158, 11, 0.45), inset 0 0 12px rgba(245, 158, 11, 0.12);
+    }
+    .pulse-dot { position: relative; width: .4rem; height: .4rem; border-radius: 9999px; background: #FBBF24; box-shadow: 0 0 8px #F59E0B; flex-shrink: 0; }
+    .pulse-dot::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: #FBBF24; animation: ping 1.8s cubic-bezier(0, 0, .2, 1) infinite; }
+    @keyframes ping { 75%, 100% { transform: scale(2.6); opacity: 0; } }
+
+    .icon-tile {
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      border-radius: .75rem; color: #FBBF24;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(217, 119, 6, 0.05));
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 22px -6px rgba(245, 158, 11, 0.5);
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .7rem; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase; color: #FBBF24;
+    }
+    .eyebrow::before { content: ''; width: 1.5rem; height: 1px; background: linear-gradient(90deg, transparent, #F59E0B); }
+    .chip {
+      display: inline-flex; align-items: center; gap: .45rem; border-radius: 9999px;
+      padding: .35rem .75rem; font-size: .72rem; font-weight: 600; color: #CBD5E1;
+      background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    .chip svg { width: .85rem; height: .85rem; color: #FBBF24; }
+    .monogram {
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      width: 2.6rem; height: 2.6rem; border-radius: .7rem;
+      font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: .85rem; letter-spacing: .04em; color: #0B0F19;
+      background: linear-gradient(135deg, #FDE68A, #F59E0B 60%, #B45309);
+      box-shadow: 0 0 18px -4px rgba(245, 158, 11, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn-gold {
+      position: relative; overflow: hidden; isolation: isolate;
+      color: #0B0F19;
+      background-image: linear-gradient(90deg, #FDE68A 0%, #FBBF24 35%, #F59E0B 68%, #D97706 100%);
+      box-shadow: 0 12px 32px -10px rgba(245, 158, 11, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      transition: transform .2s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
+    }
+    .btn-gold::after {
+      content: ''; position: absolute; z-index: -1; top: 0; left: -80%; width: 55%; height: 100%;
+      background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      transform: skewX(-20deg); transition: left .75s ease;
+    }
+    .btn-gold:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 16px 40px -10px rgba(245, 158, 11, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+    .btn-gold:hover::after { left: 130%; }
+    .btn-gold:active { transform: translateY(0); }
+    .btn-gold:disabled { cursor: progress; filter: saturate(.85); transform: none; }
+
+    .btn-glass {
+      color: #FDE68A;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.50);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: color .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .btn-glass:hover { color: #FFFFFF; background: rgba(245, 158, 11, 0.12); border-color: rgba(251, 191, 36, 0.9); box-shadow: 0 0 28px -6px rgba(245, 158, 11, 0.6); transform: translateY(-1px); }
+
+    a:focus-visible, button:focus-visible { outline: 2px solid #FBBF24; outline-offset: 3px; border-radius: .75rem; }
+
+    /* ---------- Navigation ---------- */
+    .nav-link { position: relative; display: inline-block; padding: .5rem .8rem; border-radius: .6rem; color: #94A3B8; transition: color .2s ease, background-color .2s ease; }
+    .nav-link:hover { color: #F8FAFC; background: rgba(245, 158, 11, 0.08); }
+    .nav-link.is-active { color: #FCD34D; }
+    .nav-link.is-active::after {
+      content: ''; position: absolute; left: .8rem; right: .8rem; bottom: .2rem; height: 2px; border-radius: 2px;
+      background: linear-gradient(90deg, #FDE68A, #F59E0B); box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+    }
+    .m-link { display: flex; align-items: center; justify-content: space-between; padding: .8rem .9rem; border-radius: .7rem; color: #CBD5E1; font-weight: 500; transition: background-color .2s ease, color .2s ease; }
+    .m-link:hover, .m-link.is-active { background: rgba(245, 158, 11, 0.10); color: #FCD34D; }
+
+    /* ---------- Key generator ---------- */
+    .step { position: relative; }
+    .step-head { display: flex; align-items: center; gap: .75rem; }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      width: 2.5rem; height: 2.5rem; border-radius: .8rem;
+      font-family: "JetBrains Mono", monospace; font-weight: 800; font-size: .85rem; color: #0B0F19;
+      background: linear-gradient(135deg, #FDE68A, #F59E0B 65%, #D97706);
+      box-shadow: 0 0 22px -4px rgba(245, 158, 11, 0.75);
+    }
+    .step-kicker { font-family: "JetBrains Mono", monospace; font-size: .7rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #FBBF24; }
+    @media (min-width: 640px) {
+      .step { padding-left: 3.75rem; }
+      .step-num { position: absolute; left: 0; top: -.55rem; }
+      .step:not(:last-child)::after {
+        content: ''; position: absolute; left: 1.25rem; top: 2.5rem; bottom: -2rem; width: 1px;
+        background: linear-gradient(to bottom, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.04));
+      }
+    }
+
+    .input-glass {
+      background: rgba(3, 5, 10, 0.78); color: #F8FAFC;
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .input-glass::placeholder { color: #475569; letter-spacing: .06em; }
+    .input-glass:focus { outline: none; border-color: rgba(251, 191, 36, 0.9); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.16), 0 0 30px -4px rgba(245, 158, 11, 0.55); }
+    .input-glass.is-invalid { border-color: rgba(248, 113, 113, 0.85); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.14); }
+    .input-glass[readonly] { opacity: .75; }
+    .field-error { color: #FCA5A5; }
+    .shake { animation: shake .42s cubic-bezier(.36, .07, .19, .97); }
+    @keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: .5rem; border-radius: 9999px; padding: .38rem .8rem;
+      font-size: .72rem; font-weight: 600; letter-spacing: .03em; white-space: nowrap;
+      color: #FCD34D; background: rgba(245, 158, 11, 0.10); border: 1px solid rgba(245, 158, 11, 0.45);
+      transition: color .3s ease, background-color .3s ease, border-color .3s ease;
+    }
+    .status-dot { width: .5rem; height: .5rem; border-radius: 9999px; background: currentColor; box-shadow: 0 0 10px currentColor; }
+    .status-badge[data-state="busy"] .status-dot { animation: blink .7s ease-in-out infinite; }
+    .status-badge[data-state="done"] { color: #6EE7B7; background: rgba(16, 185, 129, 0.12); border-color: rgba(52, 211, 153, 0.5); }
+    .status-badge[data-state="error"] { color: #FCA5A5; background: rgba(239, 68, 68, 0.12); border-color: rgba(248, 113, 113, 0.5); }
+    @keyframes blink { 50% { opacity: .25; } }
+
+    .pipe-node {
+      display: flex; align-items: center; gap: .6rem; padding: .7rem .85rem; border-radius: .65rem;
+      font-size: .75rem; line-height: 1.35; font-weight: 500; color: #CBD5E1;
+      background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .pipe-node svg { width: 1rem; height: 1rem; color: #FBBF24; flex-shrink: 0; }
+    .pipe-core { color: #FDE68A; font-weight: 600; border-color: rgba(245, 158, 11, 0.45); background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(15, 23, 42, 0.6)); }
+    .is-running .pipe-core { animation: corePulse 1s ease-in-out infinite; }
+    @keyframes corePulse { 50% { box-shadow: 0 0 26px -4px rgba(245, 158, 11, 0.75); border-color: rgba(251, 191, 36, 0.9); } }
+    .pipe-arrow { width: 1rem; height: 1rem; color: rgba(245, 158, 11, 0.6); align-self: center; justify-self: center; }
+
+    .engine-log {
+      min-height: 7.4rem; padding: .75rem .9rem; border-radius: .6rem;
+      color: #94A3B8; background: rgba(0, 0, 0, 0.42); border: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .log-line { display: flex; gap: .55rem; animation: lineIn .3s ease-out; }
+    .log-caret { color: #F59E0B; flex-shrink: 0; }
+    .log-line.is-muted { color: #64748B; }
+    .log-line.is-ok { color: #6EE7B7; }
+    .log-line.is-ok .log-caret { color: #34D399; }
+    .log-line.is-err { color: #FCA5A5; }
+    .log-line.is-err .log-caret { color: #F87171; }
+    @keyframes lineIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+    .engine-bar { width: 0; background: linear-gradient(90deg, #D97706, #FBBF24, #FDE68A); box-shadow: 0 0 12px rgba(245, 158, 11, 0.8); transition: width .35s ease; }
+
+    .btn-busy { display: none; }
+    .is-busy .btn-idle { display: none; }
+    .is-busy .btn-busy { display: inline-flex; }
+    .spinner { width: 1.1rem; height: 1.1rem; border-radius: 9999px; border: 2px solid rgba(11, 15, 25, 0.25); border-top-color: #0B0F19; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .key-panel {
+      background: linear-gradient(180deg, rgba(3, 5, 10, 0.94), rgba(6, 8, 14, 0.86));
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      transition: border-color .45s ease, box-shadow .45s ease;
+    }
+    .key-panel.is-live {
+      border-color: rgba(251, 191, 36, 0.75);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.22), 0 0 44px -8px rgba(245, 158, 11, 0.5), inset 0 0 32px rgba(245, 158, 11, 0.05);
+    }
+    .key-placeholder { color: #334155; letter-spacing: .32em; }
+    .key-out {
+      color: #FFFFFF; letter-spacing: .14em;
+      text-shadow: 0 0 1px #FFFFFF, 0 0 14px rgba(255, 255, 255, 0.55), 0 0 32px rgba(255, 255, 255, 0.18);
+      animation: keyIn .6s cubic-bezier(.2, .8, .2, 1);
+    }
+    @keyframes keyIn { from { opacity: 0; filter: blur(8px); letter-spacing: .4em; } to { opacity: 1; filter: blur(0); letter-spacing: .14em; } }
+
+    .copy-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .5rem; flex-shrink: 0;
+      min-width: 7.5rem; padding: .85rem 1rem; border-radius: .75rem;
+      font-size: .875rem; font-weight: 700; color: #FDE68A;
+      background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.6);
+      box-shadow: 0 0 24px -6px rgba(245, 158, 11, 0.65);
+      transition: color .25s ease, background-color .25s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
+    }
+    .copy-btn:hover:not(:disabled) { color: #FFFFFF; background: rgba(245, 158, 11, 0.22); box-shadow: 0 0 32px -4px rgba(245, 158, 11, 0.8); }
+    .copy-btn:disabled { opacity: .38; cursor: not-allowed; box-shadow: none; }
+    .copy-btn .copy-done { display: none; }
+    .copy-btn.is-copied { color: #6EE7B7; border-color: rgba(52, 211, 153, 0.6); background: rgba(16, 185, 129, 0.14); box-shadow: 0 0 28px -4px rgba(16, 185, 129, 0.6); }
+    .copy-btn.is-copied .copy-idle { display: none; }
+    .copy-btn.is-copied .copy-done { display: inline; }
+    @media (min-width: 640px) { .copy-btn { min-width: 8.75rem; padding: .95rem 1.25rem; } }
+
+    .legal-notice {
+      background: linear-gradient(135deg, rgba(153, 27, 27, 0.22) 0%, rgba(146, 64, 14, 0.20) 100%);
+      border: 1px solid rgba(251, 146, 60, 0.38);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 30px -12px rgba(127, 29, 29, 0.6);
+    }
+    .notice-icon {
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      width: 2.75rem; height: 2.75rem; border-radius: .75rem; color: #FCA5A5;
+      background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(248, 113, 113, 0.4);
+      box-shadow: 0 0 20px -6px rgba(239, 68, 68, 0.6);
+    }
+
+    /* ---------- Risk policy ---------- */
+    .risk-panel { position: relative; overflow: hidden; border-color: rgba(245, 158, 11, 0.42); }
+    .risk-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #F59E0B 20%, #DC2626 50%, #F59E0B 80%, transparent); opacity: .85; }
+    .risk-list li { display: flex; gap: .9rem; break-inside: avoid; padding: .9rem 0; border-bottom: 1px solid rgba(148, 163, 184, 0.08); }
+    .risk-num {
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem;
+      width: 1.8rem; height: 1.8rem; border-radius: .5rem;
+      font-family: "JetBrains Mono", monospace; font-size: .72rem; font-weight: 700; color: #FBBF24;
+      background: rgba(245, 158, 11, 0.10); border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* ---------- Reveal on scroll ---------- */
+    .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s cubic-bezier(.2, .7, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1); }
+    .js .reveal.is-visible { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .js .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body id="top" class="relative min-h-screen bg-obsidian-950 font-sans text-ink-muted antialiased">
+
+  <!-- Ambient background -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="grid-veil"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="relative z-10">
+
+    <!-- ============ SECTION 1: STICKY GLASS HEADER ============ -->
+    <header class="sticky top-0 z-50 px-3 pt-3 sm:px-5">
+      <nav id="siteNav" class="glass nav-bar mx-auto flex max-w-7xl items-center justify-between gap-4 px-3.5 py-2.5 sm:px-5" aria-label="Primary">
+        <a href="#top" class="flex min-w-0 items-center gap-3" aria-label="Proton Fx Academy — back to top">
+          <svg class="h-10 w-10 shrink-0" viewBox="0 0 64 64" aria-hidden="true">
+            <defs>
+              <linearGradient id="logoGold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#FDE68A"/><stop offset=".55" stop-color="#F59E0B"/><stop offset="1" stop-color="#B45309"/>
+              </linearGradient>
+            </defs>
+            <rect x="1" y="1" width="62" height="62" rx="15" fill="#0B0F19" stroke="url(#logoGold)" stroke-opacity=".7"/>
+            <circle cx="32" cy="32" r="15" fill="none" stroke="url(#logoGold)" stroke-width="3.5"/>
+            <path d="M32 9v13M32 42v13M9 32h13M42 32h13" stroke="url(#logoGold)" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="32" cy="32" r="4" fill="#FDE68A"/>
+          </svg>
+          <span class="flex min-w-0 flex-col leading-none">
+            <span class="font-display text-[13px] font-bold tracking-[0.2em] text-white sm:text-[15px]">PROTON FX ACADEMY</span>
+            <span class="badge-glow mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-[3px] font-mono text-[9.5px] font-bold tracking-[0.12em] sm:text-[10px]">
+              <span class="pulse-dot"></span>PROTON GOLD SNIPER V 2.1
+            </span>
+          </span>
+        </a>
+
+        <ul class="hidden items-center gap-1 text-sm font-medium xl:flex">
+          <li><a class="nav-link" href="#features">Features</a></li>
+          <li><a class="nav-link" href="#gold-edge">Gold Edge</a></li>
+          <li><a class="nav-link" href="#key-generator">Key Generator</a></li>
+          <li><a class="nav-link" href="#live-access">Live Access</a></li>
+          <li><a class="nav-link" href="#risk-policy">Risk Policy</a></li>
+        </ul>
+
+        <div class="flex items-center gap-2">
+          <a href="https://t.me/protonfxacademy" target="_blank" rel="noopener noreferrer" class="btn-glass hidden items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold sm:inline-flex">
+            <i data-lucide="send" class="h-4 w-4"></i>Join Official Telegram
+          </a>
+          <button id="menuToggle" type="button" class="btn-glass inline-flex h-11 w-11 items-center justify-center rounded-xl xl:hidden" aria-controls="mobileMenu" aria-expanded="false" aria-label="Open navigation menu">
+            <span data-icon-open class="inline-flex"><i data-lucide="menu" class="h-5 w-5"></i></span>
+            <span data-icon-close class="hidden"><i data-lucide="x" class="h-5 w-5"></i></span>
+          </button>
+        </div>
+      </nav>
+
+      <div id="mobileMenu" class="glass mx-auto mt-2 hidden max-w-7xl p-2.5 xl:hidden">
+        <ul class="grid gap-1 sm:grid-cols-2">
+          <li><a class="m-link" href="#features">Features<i data-lucide="chevron-right" class="h-4 w-4 opacity-60"></i></a></li>
+          <li><a class="m-link" href="#gold-edge">Gold Edge<i data-lucide="chevron-right" class="h-4 w-4 opacity-60"></i></a></li>
+          <li><a class="m-link" href="#key-generator">Key Generator<i data-lucide="chevron-right" class="h-4 w-4 opacity-60"></i></a></li>
+          <li><a class="m-link" href="#live-access">Live Access<i data-lucide="chevron-right" class="h-4 w-4 opacity-60"></i></a></li>
+          <li><a class="m-link" href="#risk-policy">Risk Policy<i data-lucide="chevron-right" class="h-4 w-4 opacity-60"></i></a></li>
+        </ul>
+        <a href="https://t.me/protonfxacademy" target="_blank" rel="noopener noreferrer" class="btn-glass mt-2 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold sm:hidden">
+          <i data-lucide="send" class="h-4 w-4"></i>Join Official Telegram
+        </a>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ============ SECTION 2: HERO ============ -->
+      <section class="relative" aria-labelledby="heroTitle">
+        <div class="mx-auto max-w-7xl px-4 pb-16 pt-14 sm:px-6 sm:pt-20 lg:px-8 lg:pt-24">
+          <div class="grid items-center gap-12 xl:grid-cols-12 xl:gap-10">
+            <div class="reveal xl:col-span-7">
+              <span class="badge-glow inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] font-semibold tracking-wide sm:text-xs">
+                <i data-lucide="chart-candlestick" class="h-3.5 w-3.5"></i>
+                Institutional-Grade XAUUSD Algorithmic EA for MetaTrader 5
+              </span>
+              <h1 id="heroTitle" class="mt-6 font-display text-[2.6rem] font-bold leading-[1.06] tracking-tight text-white sm:text-[3.4rem] lg:text-[4rem] xl:text-[3.5rem]">
+                Autonomous Precision.<br class="hidden sm:block">
+                Maximum Discipline.<br>
+                <span class="shimmer bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-500 bg-clip-text pb-1 text-transparent">Unmatched Gold Scalping.</span>
+              </h1>
+              <p class="mt-6 max-w-2xl text-base leading-relaxed sm:text-lg">
+                Engineered by <span class="font-medium text-ink">Proton Fx Academy</span> under lead developer <span class="font-medium text-ink">Mr. Omveer Singh</span>. Powered by proprietary zero-loss straddle architecture and dynamic multi-level trailing logic.
+              </p>
+              <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+                <a href="#key-generator" class="btn-gold inline-flex items-center justify-center gap-2.5 rounded-xl px-7 py-4 font-display text-base font-bold tracking-wide">
+                  <i data-lucide="key-round" class="h-5 w-5"></i>Generate License Key
+                </a>
+                <a href="#live-access" class="btn-glass inline-flex items-center justify-center gap-2.5 rounded-xl px-7 py-4 font-display text-base font-semibold">
+                  Verify Live Performance<i data-lucide="arrow-right" class="h-5 w-5"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- EA status console -->
+            <div class="reveal mx-auto w-full max-w-xl xl:col-span-5 xl:max-w-none" data-delay="120">
+              <div class="glass relative overflow-hidden p-5 sm:p-6">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="h-2.5 w-2.5 rounded-full bg-red-400/70"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-amber-400/80"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/70"></span>
+                    <span class="ml-2 font-mono text-[11px] font-bold tracking-[0.2em] text-ink-muted">EA STATUS CONSOLE</span>
+                  </div>
+                  <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tracking-[0.18em] text-emerald-300">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_8px_#6EE7B7]"></span>ARMED
+                  </span>
+                </div>
+
+                <div class="mt-5 flex items-end justify-between">
+                  <div>
+                    <p class="font-mono text-[10px] tracking-[0.25em] text-ink-dim">SYMBOL</p>
+                    <p class="mt-1 font-display text-2xl font-bold text-white">XAUUSD</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-mono text-[10px] tracking-[0.25em] text-ink-dim">TIMEFRAME</p>
+                    <p class="mt-1 font-display text-2xl font-bold text-white">M1 · M5</p>
+                  </div>
+                </div>
+
+                <figure class="terminal mt-4 p-2 sm:p-3">
+                  <svg viewBox="0 0 420 190" class="h-auto w-full" role="img" aria-label="Schematic of the straddle mechanism: a buy-stop above and a sell-stop below a consolidation range, with a breakout triggering the buy-stop and a trailing stop following price.">
+                    <defs>
+                      <linearGradient id="bullGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#FDE68A"/><stop offset="1" stop-color="#F59E0B"/>
+                      </linearGradient>
+                      <linearGradient id="zoneGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#F59E0B" stop-opacity=".10"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+                      </linearGradient>
+                    </defs>
+                    <g stroke="#94A3B8" stroke-opacity=".07">
+                      <path d="M0 30H420M0 70H420M0 110H420M0 150H420"/>
+                      <path d="M70 0V190M140 0V190M210 0V190M280 0V190M350 0V190"/>
+                    </g>
+                    <rect x="28" y="62" width="222" height="96" fill="url(#zoneGrad)"/>
+                    <path d="M0 62H420" stroke="#FBBF24" stroke-width="1.25" stroke-dasharray="6 5"/>
+                    <path d="M0 158H420" stroke="#D97706" stroke-width="1.25" stroke-dasharray="6 5" stroke-opacity=".8"/>
+                    <text x="8" y="55" fill="#FCD34D" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.5">BUY STOP</text>
+                    <text x="8" y="174" fill="#D97706" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.5">SELL STOP</text>
+
+                    <!-- consolidation candles -->
+                    <g stroke-width="1.2">
+                      <g stroke="#FBBF24"><path d="M40 98V124"/><rect x="34" y="104" width="12" height="14" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#64748B"><path d="M62 100V120"/><rect x="56" y="104" width="12" height="10" fill="#1E293B"/></g>
+                      <g stroke="#FBBF24"><path d="M84 94V118"/><rect x="78" y="100" width="12" height="14" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#64748B"><path d="M106 96V122"/><rect x="100" y="100" width="12" height="12" fill="#1E293B"/></g>
+                      <g stroke="#FBBF24"><path d="M128 102V128"/><rect x="122" y="106" width="12" height="6" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#64748B"><path d="M150 101V130"/><rect x="144" y="106" width="12" height="12" fill="#1E293B"/></g>
+                      <g stroke="#FBBF24"><path d="M172 104V124"/><rect x="166" y="108" width="12" height="10" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#64748B"><path d="M194 103V119"/><rect x="188" y="108" width="12" height="5" fill="#1E293B"/></g>
+                      <g stroke="#FBBF24"><path d="M216 96V116"/><rect x="210" y="100" width="12" height="13" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#64748B"><path d="M238 92V110"/><rect x="232" y="100" width="12" height="4" fill="#1E293B"/></g>
+                      <!-- breakout -->
+                      <g stroke="#FBBF24"><path d="M262 50V108"/><rect x="256" y="56" width="12" height="48" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#FBBF24"><path d="M286 32V64"/><rect x="280" y="40" width="12" height="16" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#64748B"><path d="M310 34V52"/><rect x="304" y="40" width="12" height="6" fill="#1E293B"/></g>
+                      <g stroke="#FBBF24"><path d="M334 20V50"/><rect x="328" y="26" width="12" height="20" fill="url(#bullGrad)" stroke="none"/></g>
+                      <g stroke="#FBBF24"><path d="M358 12V30"/><rect x="352" y="18" width="12" height="8" fill="url(#bullGrad)" stroke="none"/></g>
+                    </g>
+
+                    <!-- trailing stop -->
+                    <path d="M262 112H286V88H310V66H334V54H358V40H384" fill="none" stroke="#FFFFFF" stroke-opacity=".75" stroke-width="1.4" stroke-dasharray="3 3"/>
+                    <text x="412" y="74" text-anchor="end" fill="#F8FAFC" fill-opacity=".85" font-family="JetBrains Mono, monospace" font-size="8.5" font-weight="700" letter-spacing="1.2">TRAILING SL</text>
+
+                    <!-- entry -->
+                    <circle cx="262" cy="62" r="9" fill="#F59E0B" fill-opacity=".18"/>
+                    <circle cx="262" cy="62" r="3.6" fill="#FDE68A" stroke="#0B0F19" stroke-width="1.2"/>
+                    <text x="246" y="46" text-anchor="end" fill="#FDE68A" font-family="JetBrains Mono, monospace" font-size="8.5" font-weight="700" letter-spacing="1.2">ENTRY TRIGGERED</text>
+                  </svg>
+                  <figcaption class="px-1 pt-1.5 text-[10.5px] text-ink-dim">Illustrative straddle schematic — not live market data.</figcaption>
+                </figure>
+
+                <dl class="mt-4 grid grid-cols-2 gap-2 text-xs">
+                  <div class="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5"><dt class="text-ink-dim">Entry Logic</dt><dd class="mt-0.5 font-semibold text-ink">Straddle Breakout</dd></div>
+                  <div class="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5"><dt class="text-ink-dim">Trailing</dt><dd class="mt-0.5 font-semibold text-ink">Dynamic Multi-Level</dd></div>
+                  <div class="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5"><dt class="text-ink-dim">Martingale</dt><dd class="mt-0.5 font-semibold text-gold-300">Disabled</dd></div>
+                  <div class="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5"><dt class="text-ink-dim">Grid Averaging</dt><dd class="mt-0.5 font-semibold text-gold-300">Disabled</dd></div>
+                  <div class="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5"><dt class="text-ink-dim">Equity Guard</dt><dd class="mt-0.5 font-semibold text-emerald-300">Active</dd></div>
+                  <div class="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5"><dt class="text-ink-dim">Spread Filter</dt><dd class="mt-0.5 font-semibold text-emerald-300">Active</dd></div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trust metrics strip -->
+          <ul class="mt-16 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Key trust metrics">
+            <li class="glass glass-hover reveal flex items-center gap-3.5 p-4" data-delay="0">
+              <span class="icon-tile h-11 w-11"><i data-lucide="bot" class="h-5 w-5"></i></span>
+              <span class="text-sm font-medium leading-snug text-ink">100% Fully Automated 24x5 Execution</span>
+            </li>
+            <li class="glass glass-hover reveal flex items-center gap-3.5 p-4" data-delay="80">
+              <span class="icon-tile h-11 w-11"><i data-lucide="ban" class="h-5 w-5"></i></span>
+              <span class="text-sm font-medium leading-snug text-ink">Non-Martingale &amp; Zero Grid Architecture</span>
+            </li>
+            <li class="glass glass-hover reveal flex items-center gap-3.5 p-4" data-delay="160">
+              <span class="icon-tile h-11 w-11"><i data-lucide="shield-check" class="h-5 w-5"></i></span>
+              <span class="text-sm font-medium leading-snug text-ink">Hard Equity Protection &amp; Spread Filters</span>
+            </li>
+            <li class="glass glass-hover reveal flex items-center gap-3.5 p-4" data-delay="240">
+              <span class="icon-tile h-11 w-11"><i data-lucide="server" class="h-5 w-5"></i></span>
+              <span class="text-sm font-medium leading-snug text-ink">Tailored Exclusively for MT5 ECN / Zero Spread Accounts</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ SECTION 3: LICENSE KEY GENERATOR ============ -->
+      <section id="key-generator" class="relative py-20 sm:py-24" aria-labelledby="genTitle">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal mx-auto max-w-3xl text-center">
+            <span class="eyebrow">License Activation</span>
+            <h2 id="genTitle" class="shimmer mt-4 bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-500 bg-clip-text pb-1 font-display text-3xl font-bold leading-tight tracking-tight text-transparent sm:text-4xl lg:text-5xl">Secure License Key Generator</h2>
+            <p class="mt-4 text-base leading-relaxed sm:text-lg">Bind PROTON GOLD SNIPER V 2.1 to your MetaTrader 5 account in three steps. Every key is issued for one designated MT5 Account ID only.</p>
+          </div>
+
+          <div class="glass reveal mt-12 p-5 sm:p-8" data-delay="100">
+            <div class="flex items-center justify-between gap-4 border-b border-white/5 pb-5">
+              <div class="flex items-center gap-3">
+                <span class="icon-tile h-11 w-11"><i data-lucide="key-round" class="h-5 w-5"></i></span>
+                <div>
+                  <p class="font-display font-semibold text-white">License Activation Terminal</p>
+                  <p class="text-xs text-ink-muted">PROTON GOLD SNIPER V 2.1 · MetaTrader 5</p>
+                </div>
+              </div>
+              <span class="hidden sm:block"><span class="chip"><i data-lucide="lock"></i>Hardware-Locked</span></span>
+            </div>
+
+            <ol class="mt-8 space-y-10">
+              <!-- Step 1 -->
+              <li class="step">
+                <div class="step-head">
+                  <span class="step-num">01</span>
+                  <span class="step-kicker">Step 1 · MT5 Account Identifier</span>
+                </div>
+                <label for="mt5Id" class="mt-3 block font-display text-lg font-semibold text-white">Enter Your MT5 Account Number / ID</label>
+                <div class="relative mt-3">
+                  <i data-lucide="hash" class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gold-500/70"></i>
+                  <input id="mt5Id" name="mt5Id" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" spellcheck="false" maxlength="15"
+                         placeholder="e.g., 25904812" aria-describedby="idHelp idError"
+                         class="input-glass w-full rounded-xl py-4 pl-12 pr-4 font-mono text-lg tracking-[0.12em]">
+                </div>
+                <p id="idHelp" class="mt-2 text-xs text-ink-dim">Numbers only · minimum 5 digits · use the exact login of the MT5 account that will run the EA.</p>
+                <p id="idError" class="field-error mt-2 hidden items-center gap-1.5 text-sm" role="alert"></p>
+              </li>
+
+              <!-- Step 2 -->
+              <li class="step">
+                <div class="step-head">
+                  <span class="step-num">02</span>
+                  <span class="step-kicker">Step 2 · Encryption &amp; Verification Terminal</span>
+                </div>
+                <div id="engineCard" class="terminal mt-4 p-4 sm:p-5">
+                  <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5">
+                      <span class="icon-tile h-9 w-9"><i data-lucide="cpu" class="h-4 w-4"></i></span>
+                      <p class="font-display text-sm font-semibold text-white sm:text-base">Proton 256-Bit Hardware-Locked Key Engine</p>
+                    </div>
+                    <span id="engineStatus" class="status-badge" data-state="idle" aria-live="polite">
+                      <span class="status-dot"></span><span id="engineStatusText">Ready to Encrypt &amp; Bind</span>
+                    </span>
+                  </div>
+
+                  <div class="mt-4 grid items-stretch gap-2 sm:grid-cols-[1fr_auto_1.7fr_auto_1fr]">
+                    <div class="pipe-node"><i data-lucide="fingerprint"></i><span>MT5 Account ID</span></div>
+                    <i data-lucide="chevron-right" class="pipe-arrow rotate-90 sm:rotate-0"></i>
+                    <div class="pipe-node pipe-core"><i data-lucide="brain-circuit"></i><span>Proton Quantum Matrix 256-Bit Neural Validation Engine</span></div>
+                    <i data-lucide="chevron-right" class="pipe-arrow rotate-90 sm:rotate-0"></i>
+                    <div class="pipe-node"><i data-lucide="key-round"></i><span>Secure License Key</span></div>
+                  </div>
+
+                  <div id="engineLog" class="engine-log mt-4 font-mono text-[11.5px] leading-relaxed sm:text-xs">
+                    <div class="log-line is-muted"><span class="log-caret">›</span><span>Engine idle. Awaiting MT5 account identifier…</span></div>
+                  </div>
+                  <div class="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/5" aria-hidden="true">
+                    <div id="engineBar" class="engine-bar h-full rounded-full"></div>
+                  </div>
+                </div>
+
+                <button id="generateBtn" type="button" class="btn-gold mt-4 flex w-full items-center justify-center rounded-xl px-6 py-4 font-display text-base font-bold tracking-wide sm:text-lg">
+                  <span class="btn-idle inline-flex items-center gap-2.5"><i data-lucide="shield-check" class="h-5 w-5"></i>Generate Secure License Key</span>
+                  <span class="btn-busy items-center gap-2.5"><span class="spinner"></span>Encrypting &amp; Binding…</span>
+                </button>
+              </li>
+
+              <!-- Step 3 -->
+              <li class="step">
+                <div class="step-head">
+                  <span class="step-num">03</span>
+                  <span class="step-kicker">Step 3 · License Key Output &amp; 1-Click Copy</span>
+                </div>
+
+                <div id="keyPanel" class="key-panel mt-4 flex items-center gap-3 rounded-xl p-4 sm:gap-5 sm:p-5">
+                  <div class="min-w-0 flex-1">
+                    <p class="font-mono text-[10px] font-bold tracking-[0.28em] text-ink-dim">LICENSE KEY</p>
+                    <output id="keyOutput" for="mt5Id" class="key-placeholder mt-1 block break-all font-mono text-[1.45rem] font-extrabold leading-tight sm:text-[2rem]">••••••••</output>
+                    <p id="keyBound" class="mt-1.5 text-xs text-ink-dim">Awaiting secure generation</p>
+                  </div>
+                  <button id="copyBtn" type="button" class="copy-btn" disabled aria-label="Copy license key to clipboard">
+                    <span class="copy-idle inline-flex items-center gap-2"><i data-lucide="clipboard-copy" class="h-4 w-4"></i>Copy Key</span>
+                    <span class="copy-done">✓ Copied!</span>
+                  </button>
+                </div>
+                <p id="copyAnnounce" class="sr-only" aria-live="polite"></p>
+
+                <!-- Confidentiality & legal notice -->
+                <div class="legal-notice mt-5 flex flex-col gap-4 rounded-xl p-4 sm:flex-row sm:p-5" role="note" aria-labelledby="legalTitle">
+                  <span class="notice-icon"><i data-lucide="shield-alert" class="h-5 w-5"></i></span>
+                  <div>
+                    <p id="legalTitle" class="flex items-center gap-2 font-display text-sm font-bold tracking-wide text-amber-200">
+                      <i data-lucide="lock" class="h-3.5 w-3.5"></i>STRICT CONFIDENTIALITY &amp; LEGAL NOTICE:
+                    </p>
+                    <p class="mt-2 text-[13px] leading-relaxed text-amber-50/80">This License Key is uniquely and cryptographically bound to your designated MT5 Account ID. Sharing, distributing, reselling, or attempting to decompile this key across unauthorized trading accounts or third-party servers constitutes an infringement of intellectual property and is strictly punishable under international software copyright laws. Unauthorized usage will result in immediate automated terminal termination and global blacklisting of the account ID. Keep this key strictly confidential.</p>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SECTION 4: LIVE ACCESS ============ -->
+      <section id="live-access" class="relative py-20 sm:py-24" aria-labelledby="liveTitle">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="glass reveal relative overflow-hidden p-6 sm:p-10 lg:p-12">
+            <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" aria-hidden="true"></div>
+            <div class="relative grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
+              <div>
+                <span class="eyebrow">VIP Investor Access</span>
+                <h2 id="liveTitle" class="shimmer mt-4 bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-500 bg-clip-text pb-1 font-display text-3xl font-bold leading-tight tracking-tight text-transparent sm:text-4xl">Verify Live Performance on Real MT5 Terminals</h2>
+                <p class="mt-4 text-base leading-relaxed sm:text-lg">We believe in 100% transparency. Institutional live track records and read-only investor demo credentials are shared exclusively with verified community members.</p>
+                <ul class="mt-6 flex flex-wrap gap-2">
+                  <li class="chip"><i data-lucide="monitor"></i>Real MT5 Terminals</li>
+                  <li class="chip"><i data-lucide="eye"></i>Read-Only Investor Access</li>
+                  <li class="chip"><i data-lucide="users"></i>Verified Members Only</li>
+                </ul>
+                <a href="https://t.me/protonfxacademy" target="_blank" rel="noopener noreferrer" class="btn-glass mt-8 inline-flex w-full items-center gap-3 rounded-xl border-gold-400/70 px-5 py-4 text-left font-display text-[15px] font-semibold text-white sm:w-auto sm:px-6 sm:text-base">
+                  <span class="icon-tile h-10 w-10"><i data-lucide="send" class="h-5 w-5"></i></span>
+                  <span>Contact Admin / Developer on Telegram for Live Investor ID &amp; Password</span>
+                </a>
+                <p class="mt-5 flex items-center gap-2 text-sm">
+                  <i data-lucide="badge-check" class="h-4 w-4 shrink-0 text-gold-400"></i>
+                  <span>Verified Directly by Lead Developer: <span class="font-semibold text-ink">Mr. Omveer Singh</span></span>
+                </p>
+              </div>
+
+              <div class="terminal relative p-5 sm:p-6">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2.5">
+                    <span class="icon-tile h-9 w-9"><i data-lucide="monitor-smartphone" class="h-4 w-4"></i></span>
+                    <p class="font-display text-sm font-semibold text-white">MT5 Investor Terminal</p>
+                  </div>
+                  <span class="rounded-full border border-gold-500/40 bg-gold-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tracking-[0.18em] text-gold-300">READ-ONLY</span>
+                </div>
+                <dl class="mt-5 divide-y divide-white/5 font-mono text-sm">
+                  <div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-dim">Login ID</dt><dd class="tracking-[0.25em] text-ink-muted">•••• ••••</dd></div>
+                  <div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-dim">Investor Password</dt><dd class="tracking-[0.25em] text-ink-muted">••••••••••</dd></div>
+                  <div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-dim">Server</dt><dd class="text-ink-muted"><span class="tracking-[0.25em]">••••••</span>-Live</dd></div>
+                  <div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-dim">Platform</dt><dd class="text-white">MetaTrader 5</dd></div>
+                  <div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-dim">Instrument</dt><dd class="text-white">XAUUSD</dd></div>
+                </dl>
+                <div class="mt-4 flex items-start gap-3 rounded-lg border border-gold-500/30 bg-gold-500/10 p-3 text-xs leading-relaxed text-gold-200">
+                  <i data-lucide="lock" class="mt-0.5 h-4 w-4 shrink-0"></i>
+                  <span>Credentials are issued privately via Telegram to verified community members.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SECTION 5: GOLD EDGE ============ -->
+      <section id="gold-edge" class="relative py-20 sm:py-24" aria-labelledby="edgeTitle">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal mx-auto max-w-3xl text-center">
+            <span class="eyebrow">The Gold Edge</span>
+            <h2 id="edgeTitle" class="shimmer mt-4 bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-500 bg-clip-text pb-1 font-display text-3xl font-bold leading-tight tracking-tight text-transparent sm:text-4xl lg:text-5xl">Benefits of Spot Gold (XAUUSD) Algorithmic Trading</h2>
+            <p class="mt-4 text-base leading-relaxed sm:text-lg">Why PROTON GOLD SNIPER V 2.1 is purpose-built for a single instrument: spot gold.</p>
+          </div>
+
+          <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <article class="glass glass-hover reveal flex flex-col p-6" data-delay="0">
+              <div class="flex items-center justify-between"><span class="icon-tile h-12 w-12"><i data-lucide="activity" class="h-6 w-6"></i></span><span class="font-mono text-xs text-ink-dim">01</span></div>
+              <h3 class="mt-6 font-display text-lg font-semibold text-white">Hyper Volatility &amp; Deep Liquidity</h3>
+              <p class="mt-2.5 text-sm leading-relaxed">Gold delivers 1,500–3,500 daily pip volatility, providing high-frequency breakout scalp entries.</p>
+            </article>
+            <article class="glass glass-hover reveal flex flex-col p-6" data-delay="90">
+              <div class="flex items-center justify-between"><span class="icon-tile h-12 w-12"><i data-lucide="arrow-up-down" class="h-6 w-6"></i></span><span class="font-mono text-xs text-ink-dim">02</span></div>
+              <h3 class="mt-6 font-display text-lg font-semibold text-white">Zero Directional Bias</h3>
+              <p class="mt-2.5 text-sm leading-relaxed">The Straddle logic captures explosive expansion phases whether gold rallies on inflation or plunges on yields.</p>
+            </article>
+            <article class="glass glass-hover reveal flex flex-col p-6" data-delay="180">
+              <div class="flex items-center justify-between"><span class="icon-tile h-12 w-12"><i data-lucide="chart-candlestick" class="h-6 w-6"></i></span><span class="font-mono text-xs text-ink-dim">03</span></div>
+              <h3 class="mt-6 font-display text-lg font-semibold text-white">Clean Technical Order Flow</h3>
+              <p class="mt-2.5 text-sm leading-relaxed">Pristine institutional support/resistance reactions compared to chaotic multi-currency cross pairs.</p>
+            </article>
+            <article class="glass glass-hover reveal flex flex-col p-6" data-delay="270">
+              <div class="flex items-center justify-between"><span class="icon-tile h-12 w-12"><i data-lucide="moon-star" class="h-6 w-6"></i></span><span class="font-mono text-xs text-ink-dim">04</span></div>
+              <h3 class="mt-6 font-display text-lg font-semibold text-white">Zero Weekend Exposure</h3>
+              <p class="mt-2.5 text-sm leading-relaxed">Dynamic intra-session closing logic ensures zero overnight gap-down risks.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SECTION 6: EA CORE FEATURES ============ -->
+      <section id="features" class="relative py-20 sm:py-24" aria-labelledby="featTitle">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal mx-auto max-w-3xl text-center">
+            <span class="eyebrow">EA Core Features</span>
+            <h2 id="featTitle" class="shimmer mt-4 bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-500 bg-clip-text pb-1 font-display text-3xl font-bold leading-tight tracking-tight text-transparent sm:text-4xl lg:text-5xl">PROTON GOLD SNIPER V 2.1 — EA Core Features</h2>
+            <p class="mt-4 text-base leading-relaxed sm:text-lg">Institutional-standard execution modules engineered for disciplined, rules-based gold scalping.</p>
+          </div>
+
+          <div class="mt-14 grid gap-5 lg:grid-cols-3">
+            <div class="grid gap-5 sm:grid-cols-2 lg:col-span-2">
+              <article class="glass glass-hover reveal flex flex-col p-6 sm:p-7" data-delay="0">
+                <span class="icon-tile h-12 w-12"><i data-lucide="crosshair" class="h-6 w-6"></i></span>
+                <h3 class="mt-6 font-display text-xl font-semibold text-white">Zero-Loss Straddle Execution Engine</h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed">Dual pending buy-stop and sell-stop algorithmic positioning triggered at volatility thresholds.</p>
+                <span class="mt-5 font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400/80">EXECUTION CORE</span>
+              </article>
+              <article class="glass glass-hover reveal flex flex-col p-6 sm:p-7" data-delay="90">
+                <span class="icon-tile h-12 w-12"><i data-lucide="trending-up" class="h-6 w-6"></i></span>
+                <h3 class="mt-6 font-display text-xl font-semibold text-white">Micro-Trailing Stop Mechanism</h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed">Automatically secures fractional profit in pips while letting runners hit extended targets.</p>
+                <span class="mt-5 font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400/80">PROFIT LOCK</span>
+              </article>
+              <article class="glass glass-hover reveal flex flex-col p-6 sm:p-7" data-delay="0">
+                <span class="icon-tile h-12 w-12"><i data-lucide="radar" class="h-6 w-6"></i></span>
+                <h3 class="mt-6 font-display text-xl font-semibold text-white">Dynamic Spread &amp; Slippage Armor</h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed">Halts trading during high-impact news releases or broker spread widening.</p>
+                <span class="mt-5 font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400/80">MARKET FILTER</span>
+              </article>
+              <article class="glass glass-hover reveal flex flex-col p-6 sm:p-7" data-delay="90">
+                <span class="icon-tile h-12 w-12"><i data-lucide="landmark" class="h-6 w-6"></i></span>
+                <h3 class="mt-6 font-display text-xl font-semibold text-white">Strict Capital Protection</h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed">Built-in daily equity stop, fixed stop-loss per order, and absolute zero reliance on martingale or grid averaging.</p>
+                <span class="mt-5 font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400/80">CAPITAL GUARD</span>
+              </article>
+            </div>
+
+            <aside class="glass glass-hover reveal relative flex flex-col overflow-hidden p-6 sm:p-7" data-delay="150" aria-labelledby="setupTitle">
+              <div class="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-amber-500/10 blur-3xl" aria-hidden="true"></div>
+              <div class="relative flex items-center gap-3">
+                <span class="icon-tile h-12 w-12"><i data-lucide="settings-2" class="h-6 w-6"></i></span>
+                <div>
+                  <p class="font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400">DEPLOYMENT BLUEPRINT</p>
+                  <h3 id="setupTitle" class="mt-1 font-display text-xl font-semibold text-white">Recommended Setup</h3>
+                </div>
+              </div>
+              <dl class="relative mt-6 flex-1 divide-y divide-white/5">
+                <div class="flex items-start justify-between gap-4 py-4">
+                  <dt class="flex items-center gap-2 text-sm"><i data-lucide="coins" class="h-4 w-4 text-gold-500"></i>Symbol</dt>
+                  <dd class="text-right font-mono text-sm font-semibold text-white">XAUUSD (Gold)</dd>
+                </div>
+                <div class="flex items-start justify-between gap-4 py-4">
+                  <dt class="flex items-center gap-2 text-sm"><i data-lucide="clock-4" class="h-4 w-4 text-gold-500"></i>Timeframe</dt>
+                  <dd class="text-right font-mono text-sm font-semibold text-white">M1 or M5</dd>
+                </div>
+                <div class="flex items-start justify-between gap-4 py-4">
+                  <dt class="flex shrink-0 items-center gap-2 text-sm"><i data-lucide="building-2" class="h-4 w-4 text-gold-500"></i>Broker Type</dt>
+                  <dd class="text-right font-mono text-sm font-semibold text-white">Raw Spread / Zero Spread / True ECN</dd>
+                </div>
+                <div class="flex items-start justify-between gap-4 py-4">
+                  <dt class="flex shrink-0 items-center gap-2 text-sm"><i data-lucide="gauge" class="h-4 w-4 text-gold-500"></i>Execution Latency</dt>
+                  <dd class="text-right font-mono text-sm font-semibold text-white">Best with VPS &lt; 15ms</dd>
+                </div>
+              </dl>
+              <p class="relative mt-4 rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs leading-relaxed">Always validate your lot sizing and risk parameters on a demo terminal before live deployment.</p>
+              <a href="#key-generator" class="btn-gold relative mt-5 inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-display font-bold">
+                <i data-lucide="key-round" class="h-5 w-5"></i>Activate Your License
+              </a>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SECTION 7: BROKER COMPATIBILITY ============ -->
+      <section id="brokers" class="relative py-20 sm:py-24" aria-labelledby="brokerTitle">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal mx-auto max-w-3xl text-center">
+            <span class="eyebrow">Broker Compatibility</span>
+            <h2 id="brokerTitle" class="shimmer mt-4 bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-500 bg-clip-text pb-1 font-display text-3xl font-bold leading-tight tracking-tight text-transparent sm:text-4xl lg:text-5xl">Certified Low-Spread Broker Compatibility</h2>
+            <p class="mt-4 text-base leading-relaxed sm:text-lg">Built for raw-spread, zero-spread and true ECN MetaTrader 5 account types.</p>
+          </div>
+
+          <ul class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-5 sm:gap-4">
+            <li class="glass glass-hover reveal relative flex items-center gap-3.5 p-4 pr-9" data-delay="0">
+              <span class="monogram">EX</span>
+              <span class="min-w-0"><span class="block font-display font-semibold leading-snug text-white">Exness</span><span class="mt-0.5 block text-xs">Raw / Zero Spread</span></span>
+              <i data-lucide="badge-check" class="absolute right-3 top-3 h-4 w-4 text-gold-400"></i>
+            </li>
+            <li class="glass glass-hover reveal relative flex items-center gap-3.5 p-4 pr-9" data-delay="70">
+              <span class="monogram">IC</span>
+              <span class="min-w-0"><span class="block font-display font-semibold leading-snug text-white">IC Markets</span><span class="mt-0.5 block text-xs">Raw Spread</span></span>
+              <i data-lucide="badge-check" class="absolute right-3 top-3 h-4 w-4 text-gold-400"></i>
+            </li>
+            <li class="glass glass-hover reveal relative flex items-center gap-3.5 p-4 pr-9" data-delay="140">
+              <span class="monogram">PS</span>
+              <span class="min-w-0"><span class="block font-display font-semibold leading-snug text-white">Pepperstone</span><span class="mt-0.5 block text-xs">Razor</span></span>
+              <i data-lucide="badge-check" class="absolute right-3 top-3 h-4 w-4 text-gold-400"></i>
+            </li>
+            <li class="glass glass-hover reveal relative flex items-center gap-3.5 p-4 pr-9" data-delay="210">
+              <span class="monogram">VA</span>
+              <span class="min-w-0"><span class="block font-display font-semibold leading-snug text-white">Vantage Markets</span><span class="mt-0.5 block text-xs">Raw ECN</span></span>
+              <i data-lucide="badge-check" class="absolute right-3 top-3 h-4 w-4 text-gold-400"></i>
+            </li>
+            <li class="glass glass-hover reveal relative flex items-center gap-3.5 p-4 pr-9" data-delay="280">
+              <span class="monogram">FV</span>
+              <span class="min-w-0"><span class="block font-display font-semibold leading-snug text-white">Fusion Markets / VT Markets</span><span class="mt-0.5 block text-xs">Low-Spread Accounts</span></span>
+              <i data-lucide="badge-check" class="absolute right-3 top-3 h-4 w-4 text-gold-400"></i>
+            </li>
+          </ul>
+          <p class="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-ink-dim">Broker names and trademarks belong to their respective owners and are listed for MT5 compatibility reference only. No affiliation or endorsement is implied.</p>
+        </div>
+      </section>
+
+      <!-- ============ SECTION 8: RISK WARNING ============ -->
+      <section id="risk-policy" class="relative py-20 sm:py-24" aria-labelledby="riskTitle">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="glass risk-panel reveal p-6 sm:p-10">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <span class="notice-icon h-12 w-12"><i data-lucide="triangle-alert" class="h-6 w-6"></i></span>
+              <div>
+                <span class="eyebrow">Risk Policy</span>
+                <h2 id="riskTitle" class="mt-2 bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-500 bg-clip-text font-display text-xl font-bold leading-snug tracking-tight text-transparent sm:text-2xl">FOREX TRADING RISK WARNING AND REGULATORY DISCLAIMER:</h2>
+              </div>
+            </div>
+
+            <ol class="risk-list mt-8 text-sm leading-relaxed md:columns-2 md:gap-12">
+              <li><span class="risk-num">01</span><p>Trading foreign exchange, spot gold (XAUUSD), commodities, and leveraged contracts involves a substantial degree of risk and is not suitable for all investors.</p></li>
+              <li><span class="risk-num">02</span><p>The high level of leverage available in MetaTrader 5 trading can operate both against you and for you, potentially leading to the rapid depletion of your deposited funds.</p></li>
+              <li><span class="risk-num">03</span><p>Before activating PROTON GOLD SNIPER V 2.1 or executing automated software by Proton Fx Academy, thoroughly evaluate your financial situation, experience level, and risk tolerance.</p></li>
+              <li><span class="risk-num">04</span><p>Past performance, backtests, simulations, or investor demo account results are not indicative of future market returns or guaranteed performance.</p></li>
+              <li><span class="risk-num">05</span><p>While our proprietary zero-loss straddle architecture is engineered with tight algorithmic risk controls, exceptional market volatility, slippage, and broker execution delays can cause unpredictable variations.</p></li>
+              <li><span class="risk-num">06</span><p>Proton Fx Academy and Lead Developer Mr. Omveer Singh do not offer registered financial advisory, portfolio management, or guaranteed profit assurances.</p></li>
+              <li><span class="risk-num">07</span><p>You remain solely responsible for configuring lot allocations, risk parameters, and conducting independent evaluation on demo terminals prior to live deployment.</p></li>
+              <li><span class="risk-num">08</span><p>Under no circumstances should you allocate funds, risk capital, or savings that you cannot afford to lose completely.</p></li>
+              <li><span class="risk-num">09</span><p>You are strongly advised to obtain independent financial counsel if you possess any uncertainties regarding the mechanics of leveraged margin trading.</p></li>
+              <li><span class="risk-num">10</span><p>By generating a license key and utilizing PROTON GOLD SNIPER V 2.1, you explicitly acknowledge and assume full responsibility for all associated financial and operational trading risks.</p></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============ SECTION 9: FOOTER ============ -->
+    <footer class="relative mt-8 border-t border-gold-500/15 bg-obsidian-950/60 backdrop-blur-glass">
+      <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="grid gap-10 lg:grid-cols-12">
+          <div class="lg:col-span-4">
+            <div class="flex items-center gap-3">
+              <svg class="h-11 w-11 shrink-0" viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="1" y="1" width="62" height="62" rx="15" fill="#0B0F19" stroke="url(#logoGold)" stroke-opacity=".7"/>
+                <circle cx="32" cy="32" r="15" fill="none" stroke="url(#logoGold)" stroke-width="3.5"/>
+                <path d="M32 9v13M32 42v13M9 32h13M42 32h13" stroke="url(#logoGold)" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="32" cy="32" r="4" fill="#FDE68A"/>
+              </svg>
+              <div>
+                <p class="font-display text-base font-bold tracking-[0.2em] text-white">PROTON FX ACADEMY</p>
+                <p class="mt-1 font-mono text-[10px] font-bold tracking-[0.16em] text-gold-400">PROTON GOLD SNIPER V 2.1</p>
+              </div>
+            </div>
+            <p class="mt-5 max-w-sm text-sm leading-relaxed">Institutional-grade XAUUSD automation for MetaTrader 5, engineered by Mr. Omveer Singh.</p>
+            <nav class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label="Footer">
+              <a class="transition hover:text-gold-300" href="#features">Features</a>
+              <a class="transition hover:text-gold-300" href="#gold-edge">Gold Edge</a>
+              <a class="transition hover:text-gold-300" href="#key-generator">Key Generator</a>
+              <a class="transition hover:text-gold-300" href="#live-access">Live Access</a>
+              <a class="transition hover:text-gold-300" href="#risk-policy">Risk Policy</a>
+            </nav>
+          </div>
+
+          <div class="grid gap-3 sm:grid-cols-2 lg:col-span-8">
+            <a href="https://www.protonfxacademy.com" target="_blank" rel="noopener noreferrer" class="glass glass-hover flex items-center gap-4 p-5">
+              <span class="icon-tile h-11 w-11"><i data-lucide="globe" class="h-5 w-5"></i></span>
+              <span class="min-w-0"><span class="block font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400">OFFICIAL WEB</span><span class="mt-1 block truncate font-medium text-ink">www.protonfxacademy.com</span></span>
+            </a>
+            <div class="glass glass-hover flex items-center gap-4 p-5">
+              <span class="icon-tile h-11 w-11"><i data-lucide="mail" class="h-5 w-5"></i></span>
+              <span class="min-w-0">
+                <span class="block font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400">INQUIRIES</span>
+                <a href="mailto:help@protonfxacademy.com" class="mt-1 block truncate font-medium text-ink transition hover:text-gold-300">help@protonfxacademy.com</a>
+                <a href="mailto:admin@protonfxacademy.com" class="block truncate font-medium text-ink transition hover:text-gold-300">admin@protonfxacademy.com</a>
+              </span>
+            </div>
+            <a href="https://t.me/protonfxacademy" target="_blank" rel="noopener noreferrer" class="glass glass-hover flex items-center gap-4 p-5">
+              <span class="icon-tile h-11 w-11"><i data-lucide="send" class="h-5 w-5"></i></span>
+              <span class="min-w-0"><span class="block font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400">TELEGRAM</span><span class="mt-1 block truncate font-medium text-ink">t.me/protonfxacademy</span></span>
+            </a>
+            <a href="https://www.youtube.com/protonfxacademy" target="_blank" rel="noopener noreferrer" class="glass glass-hover flex items-center gap-4 p-5">
+              <span class="icon-tile h-11 w-11">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg>
+              </span>
+              <span class="min-w-0"><span class="block font-mono text-[10px] font-bold tracking-[0.22em] text-gold-400">YOUTUBE</span><span class="mt-1 block truncate font-medium text-ink">youtube.com/protonfxacademy</span></span>
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-12 space-y-3 border-t border-white/5 pt-8 text-center">
+          <p class="text-sm text-ink">© 2026 PROTON GOLD SNIPER V 2.1. All Rights Reserved. Engineered by Mr. Omveer Singh | Proton Fx Academy.</p>
+          <p class="mx-auto max-w-3xl text-xs leading-relaxed text-ink-dim">Strictly Protected by International Software Copyright Treaties. Any unauthorized reverse engineering, DLL decompilation, unauthorized key sharing, or reproduction is unlawful and subject to legal prosecution.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Lucide Icons (CDN, version-pinned) -->
+  <script src="https://unpkg.com/lucide@1.57.0/dist/umd/lucide.min.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var doc = document;
+    var byId = function (id) { return doc.getElementById(id); };
+
+    /* ---------- Icons ---------- */
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons({ attrs: { 'stroke-width': 1.75, 'aria-hidden': 'true' } });
+    }
+
+    /* ---------- Header state ---------- */
+    var nav = byId('siteNav');
+    var onScroll = function () { nav.classList.toggle('is-scrolled', window.scrollY > 12); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ---------- Mobile menu ---------- */
+    var menuBtn = byId('menuToggle');
+    var menu = byId('mobileMenu');
+    var iconOpen = menuBtn.querySelector('[data-icon-open]');
+    var iconClose = menuBtn.querySelector('[data-icon-close]');
+    var setMenu = function (open) {
+      menu.classList.toggle('hidden', !open);
+      iconOpen.classList.toggle('hidden', open);
+      iconClose.classList.toggle('hidden', !open);
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuBtn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+    };
+    menuBtn.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
+    menu.addEventListener('click', function (e) { if (e.target.closest('a')) { setMenu(false); } });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setMenu(false); } });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 1280) { setMenu(false); } });
+
+    var hasIO = 'IntersectionObserver' in window;
+
+    /* ---------- Active section highlighting ---------- */
+    var links = Array.prototype.slice.call(doc.querySelectorAll('.nav-link, .m-link'));
+    if (hasIO) {
+      var spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) { return; }
+          var hash = entry.target.id ? '#' + entry.target.id : '';
+          links.forEach(function (a) { a.classList.toggle('is-active', a.getAttribute('href') === hash); });
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      doc.querySelectorAll('main section').forEach(function (s) { spy.observe(s); });
+    }
+
+    /* ---------- Reveal on scroll ---------- */
+    var reveals = doc.querySelectorAll('.reveal');
+    if (hasIO) {
+      var revealer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) { return; }
+          var delay = parseInt(entry.target.getAttribute('data-delay') || '0', 10);
+          entry.target.style.transitionDelay = delay + 'ms';
+          entry.target.classList.add('is-visible');
+          revealer.unobserve(entry.target);
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      reveals.forEach(function (el) { revealer.observe(el); });
+    } else {
+      reveals.forEach(function (el) { el.classList.add('is-visible'); });
+    }
+
+    /* ---------- Proton key engine ---------- */
+    var _0x2c7e = (function () {
+      var _0x4b = ['\x42\x69\x67\x49\x6e\x74', '\x74\x6f\x53\x74\x72\x69\x6e\x67'];
+      var _0x9e = [0x5a5, 0x3c, 0x26e, 0x11, 0x1f4, 0xa];
+      var _0x1d = function (_0x5f) { return globalThis[_0x4b[0x0]](_0x5f); };
+      var _0x7a = function (_0x3c, _0x6b) { return _0x3c ^ _0x6b; };
+      return function (_0x58) {
+        var _0x21 = _0x1d(_0x58);
+        var _0x3e = _0x1d(_0x9e[0x1] * _0x9e[0x4]);
+        var _0x47 = _0x7a(_0x21 << _0x1d(_0x9e[0x3] & 0x1), _0x3e);
+        var _0x6c = _0x7a(_0x47, _0x3e) + _0x1d(_0x7a(_0x9e[0x0], _0x9e[0x2]));
+        return _0x6c[_0x4b[0x1]](_0x9e[0x5]);
+      };
+    })();
+
+    /* ---------- License key generator UI ---------- */
+    var input = byId('mt5Id');
+    var errBox = byId('idError');
+    var genBtn = byId('generateBtn');
+    var engineCard = byId('engineCard');
+    var statusBadge = byId('engineStatus');
+    var statusText = byId('engineStatusText');
+    var logBox = byId('engineLog');
+    var bar = byId('engineBar');
+    var keyPanel = byId('keyPanel');
+    var keyOut = byId('keyOutput');
+    var keyBound = byId('keyBound');
+    var copyBtn = byId('copyBtn');
+    var announce = byId('copyAnnounce');
+
+    var VALID_ID = /^[1-9]\d{4,14}$/;
+    var busy = false;
+    var issuedKey = '';
+    var copyTimer = null;
+
+    var setStatus = function (state, text) {
+      statusBadge.setAttribute('data-state', state);
+      statusText.textContent = text;
+    };
+
+    var addLog = function (text, kind) {
+      var line = doc.createElement('div');
+      line.className = 'log-line' + (kind ? ' is-' + kind : '');
+      var caret = doc.createElement('span');
+      caret.className = 'log-caret';
+      caret.textContent = '›';
+      var msg = doc.createElement('span');
+      msg.textContent = text;
+      line.appendChild(caret);
+      line.appendChild(msg);
+      logBox.appendChild(line);
+    };
+
+    var resetLog = function (text) {
+      logBox.textContent = '';
+      addLog(text, 'muted');
+    };
+
+    var showError = function (message) {
+      errBox.textContent = message;
+      errBox.classList.remove('hidden');
+      errBox.classList.add('flex');
+      input.classList.add('is-invalid');
+      input.setAttribute('aria-invalid', 'true');
+      input.classList.remove('shake');
+      void input.offsetWidth;
+      input.classList.add('shake');
+      setStatus('error', 'Invalid Account ID');
+      input.focus();
+    };
+
+    var clearError = function () {
+      errBox.textContent = '';
+      errBox.classList.add('hidden');
+      errBox.classList.remove('flex');
+      input.classList.remove('is-invalid', 'shake');
+      input.removeAttribute('aria-invalid');
+    };
+
+    var resetOutput = function () {
+      issuedKey = '';
+      keyOut.textContent = '••••••••';
+      keyOut.className = 'key-placeholder mt-1 block break-all font-mono text-[1.45rem] font-extrabold leading-tight sm:text-[2rem]';
+      keyBound.textContent = 'Awaiting secure generation';
+      keyPanel.classList.remove('is-live');
+      copyBtn.disabled = true;
+      copyBtn.classList.remove('is-copied');
+      bar.style.width = '0%';
+    };
+
+    var setBusy = function (on) {
+      busy = on;
+      genBtn.disabled = on;
+      genBtn.classList.toggle('is-busy', on);
+      genBtn.setAttribute('aria-busy', String(on));
+      engineCard.classList.toggle('is-running', on);
+      input.readOnly = on;
+    };
+
+    var revealKey = function (key, id) {
+      issuedKey = key;
+      keyOut.textContent = key;
+      keyOut.className = 'key-out mt-1 block break-all font-mono text-[1.45rem] font-extrabold leading-tight sm:text-[2rem]';
+      keyBound.textContent = 'Bound to MT5 Account ID: ' + id;
+      keyPanel.classList.add('is-live');
+      copyBtn.disabled = false;
+      var rect = keyPanel.getBoundingClientRect();
+      if (rect.bottom > window.innerHeight || rect.top < 80) {
+        keyPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    var generate = function () {
+      if (busy) { return; }
+      var id = input.value.trim();
+
+      if (!id) { showError('Please enter your MT5 account number to continue.'); return; }
+      if (!VALID_ID.test(id)) { showError('Enter a valid MT5 account number — digits only, minimum 5 digits, no leading zero.'); return; }
+
+      clearError();
+      resetOutput();
+      setBusy(true);
+      setStatus('busy', 'Encrypting & Binding…');
+      logBox.textContent = '';
+
+      var steps = [
+        { at: 0,    pct: 18, text: 'Initializing Proton 256-Bit Hardware-Locked Key Engine' },
+        { at: 340,  pct: 42, text: 'Binding MT5 account identifier #' + id },
+        { at: 700,  pct: 70, text: 'Routing through Proton Quantum Matrix 256-Bit Neural Validation Engine' },
+        { at: 1060, pct: 90, text: 'Sealing hardware-locked license signature' }
+      ];
+      steps.forEach(function (s) {
+        setTimeout(function () { addLog(s.text); bar.style.width = s.pct + '%'; }, s.at);
+      });
+
+      setTimeout(function () {
+        var key;
+        try { key = _0x2c7e(id); } catch (e) { key = ''; }
+        bar.style.width = '100%';
+        setBusy(false);
+        if (!key) {
+          addLog('Engine fault — please refresh the page and try again.', 'err');
+          setStatus('error', 'Engine Fault');
+          return;
+        }
+        addLog('License key sealed & bound successfully ✓', 'ok');
+        setStatus('done', 'Key Bound & Sealed');
+        revealKey(key, id);
+      }, 1420);
+    };
+
+    input.addEventListener('input', function () {
+      var clean = input.value.replace(/\D+/g, '').slice(0, 15);
+      if (clean !== input.value) { input.value = clean; }
+      if (!errBox.classList.contains('hidden')) { clearError(); }
+      if (issuedKey || statusBadge.getAttribute('data-state') !== 'idle') {
+        resetOutput();
+        setStatus('idle', 'Ready to Encrypt & Bind');
+        resetLog('Engine idle. Awaiting MT5 account identifier…');
+      }
+    });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); generate(); }
+    });
+    genBtn.addEventListener('click', generate);
+
+    /* ---------- Copy to clipboard ---------- */
+    var legacyCopy = function (text) {
+      return new Promise(function (resolve, reject) {
+        var ta = doc.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        ta.style.opacity = '0';
+        doc.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = doc.execCommand('copy'); } catch (e) { ok = false; }
+        doc.body.removeChild(ta);
+        if (ok) { resolve(); } else { reject(new Error('copy-failed')); }
+      });
+    };
+
+    var copyText = function (text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
+      }
+      return legacyCopy(text);
+    };
+
+    var selectKeyText = function () {
+      var range = doc.createRange();
+      range.selectNodeContents(keyOut);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    };
+
+    copyBtn.addEventListener('click', function () {
+      if (!issuedKey) { return; }
+      copyText(issuedKey).then(function () {
+        copyBtn.classList.add('is-copied');
+        announce.textContent = 'License key copied to clipboard.';
+        clearTimeout(copyTimer);
+        copyTimer = setTimeout(function () {
+          copyBtn.classList.remove('is-copied');
+          announce.textContent = '';
+        }, 2000);
+      }, function () {
+        selectKeyText();
+        announce.textContent = 'Automatic copy is unavailable. The key is selected — press Ctrl+C or Cmd+C to copy.';
+      });
+    });
+  })();
+  </script>
+</body>
+</html>
